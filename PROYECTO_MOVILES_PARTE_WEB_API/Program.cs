@@ -21,11 +21,11 @@ builder.Services.AddSqlServer<AlquilerCanchitasContext>(builder.Configuration.Ge
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.RoutePrefix = "swagger";
+});
 
 app.UseHttpsRedirection();
 
