@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,269 +16,184 @@ public partial class AlquilerCanchitasContext : DbContext
     }
 
     public virtual DbSet<Alumno> Alumnos { get; set; }
-
-    public virtual DbSet<Asistencia> Asistencia { get; set; }
-
+    public virtual DbSet<Asistencia> Asistencias { get; set; }
     public virtual DbSet<Cancha> Canchas { get; set; }
-
+    public virtual DbSet<Clase> Clases { get; set; }
     public virtual DbSet<Cliente> Clientes { get; set; }
-
-    public virtual DbSet<HorarioAcademia> HorarioAcademia { get; set; }
-
     public virtual DbSet<PrestamoBalon> PrestamoBalons { get; set; }
-
-    public virtual DbSet<Profesor> Profesors { get; set; }
-
     public virtual DbSet<Reserva> Reservas { get; set; }
-
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Alumno>(entity =>
+        modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.PkIdAlumno).HasName("PK__ALUMNO__90593D279D0045BA");
+            entity.HasKey(e => e.IdUsuario);
+            entity.ToTable("USUARIO");
+            entity.HasIndex(e => e.UsernameUsuario, "uq_usuario_username").IsUnique();
 
-            entity.ToTable("ALUMNO");
-
-            entity.Property(e => e.PkIdAlumno).HasColumnName("PK_id_alumno");
-            entity.Property(e => e.FechaIngreso).HasColumnName("fecha_ingreso");
-            entity.Property(e => e.FkIdProfesor).HasColumnName("FK_id_profesor");
-            entity.Property(e => e.Nombre)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("nombre");
-            entity.Property(e => e.TelefonoApoderado)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono_apoderado");
-
-            entity.HasOne(d => d.FkIdProfesorNavigation).WithMany(p => p.Alumnos)
-                .HasForeignKey(d => d.FkIdProfesor)
-                .HasConstraintName("fk_alumno_profesor");
-        });
-
-        modelBuilder.Entity<Asistencia>(entity =>
-        {
-            entity.HasKey(e => e.PkIdAsistencia).HasName("PK__ASISTENC__0507D6EE0374FB5C");
-
-            entity.ToTable("ASISTENCIA");
-
-            entity.Property(e => e.PkIdAsistencia).HasColumnName("PK_id_asistencia");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("estado");
-            entity.Property(e => e.FechaClase).HasColumnName("fecha_clase");
-            entity.Property(e => e.FkIdAlumno).HasColumnName("FK_id_alumno");
-
-            entity.HasOne(d => d.FkIdAlumnoNavigation).WithMany(p => p.Asistencia)
-                .HasForeignKey(d => d.FkIdAlumno)
-                .HasConstraintName("fk_asistencia_alumno");
+            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+            entity.Property(e => e.UsernameUsuario).HasMaxLength(50).IsUnicode(false).HasColumnName("username_usuario");
+            entity.Property(e => e.NombreUsuario).HasMaxLength(100).IsUnicode(false).HasColumnName("nombre_usuario");
+            entity.Property(e => e.Telefono).HasMaxLength(20).IsUnicode(false).HasColumnName("telefono");
+            entity.Property(e => e.Password).HasMaxLength(255).IsUnicode(false).HasColumnName("password");
+            entity.Property(e => e.ActivoUsuario).HasDefaultValue(true).HasColumnName("activo_usuario");
+            entity.Property(e => e.Rol).HasMaxLength(20).IsUnicode(false).HasColumnName("rol");
         });
 
         modelBuilder.Entity<Cancha>(entity =>
         {
-            entity.HasKey(e => e.PkIdCancha).HasName("PK__CANCHA__8D4B63BA03025D23");
-
+            entity.HasKey(e => e.IdCancha);
             entity.ToTable("CANCHA");
 
-            entity.Property(e => e.PkIdCancha).HasColumnName("PK_id_cancha");
-            entity.Property(e => e.Activo)
-                .HasDefaultValue(true)
-                .HasColumnName("activo");
-            entity.Property(e => e.Nombre)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nombre");
-            entity.Property(e => e.PrecioAlquiler)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("precio_alquiler");
-            entity.Property(e => e.TipoDeporteCesped)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("tipo_deporte_cesped");
+            entity.Property(e => e.IdCancha).HasColumnName("id_cancha");
+            entity.Property(e => e.NombreCancha).HasMaxLength(50).IsUnicode(false).HasColumnName("nombre_cancha");
+            entity.Property(e => e.DescripcionCancha).HasMaxLength(150).IsUnicode(false).HasColumnName("descripcion_cancha");
+            entity.Property(e => e.PrecioAlquiler).HasColumnType("decimal(10, 2)").HasColumnName("precio_alquiler");
+            entity.Property(e => e.ActivoCancha).HasDefaultValue(true).HasColumnName("activo_cancha");
         });
 
         modelBuilder.Entity<Cliente>(entity =>
         {
-            entity.HasKey(e => e.PkIdCliente).HasName("PK__CLIENTE__A3A81B3F694ED9F6");
-
+            entity.HasKey(e => e.IdCliente);
             entity.ToTable("CLIENTE");
+            entity.HasIndex(e => e.NumeroDocumento, "uq_cliente_dni").IsUnique();
 
-            entity.HasIndex(e => e.Dni, "uq_cliente_dni").IsUnique();
-
-            entity.Property(e => e.PkIdCliente).HasColumnName("PK_id_cliente");
-            entity.Property(e => e.Activo)
-                .HasDefaultValue(true)
-                .HasColumnName("activo");
-            entity.Property(e => e.Dni)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("dni");
-            entity.Property(e => e.Nombre)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("nombre");
-            entity.Property(e => e.TipoCliente)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("tipo_cliente");
-        });
-
-        modelBuilder.Entity<HorarioAcademia>(entity =>
-        {
-            entity.HasKey(e => e.PkIdHorario).HasName("PK__HORARIO___986B40ECC34E3638");
-
-            entity.ToTable("HORARIO_ACADEMIA", tb => tb.HasTrigger("trg_horario_academia_no_overlap"));
-
-            entity.Property(e => e.PkIdHorario).HasColumnName("PK_id_horario");
-            entity.Property(e => e.Activo)
-                .HasDefaultValue(true)
-                .HasColumnName("activo");
-            entity.Property(e => e.DiaSemana)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("dia_semana");
-            entity.Property(e => e.FkIdCancha).HasColumnName("FK_id_cancha");
-            entity.Property(e => e.FkIdProfesor).HasColumnName("FK_id_profesor");
-            entity.Property(e => e.HoraFin)
-                .HasPrecision(0)
-                .HasColumnName("hora_fin");
-            entity.Property(e => e.HoraInicio)
-                .HasPrecision(0)
-                .HasColumnName("hora_inicio");
-
-            entity.HasOne(d => d.FkIdCanchaNavigation).WithMany(p => p.HorarioAcademia)
-                .HasForeignKey(d => d.FkIdCancha)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_horario_cancha");
-
-            entity.HasOne(d => d.FkIdProfesorNavigation).WithMany(p => p.HorarioAcademia)
-                .HasForeignKey(d => d.FkIdProfesor)
-                .HasConstraintName("fk_horario_profesor");
-        });
-
-        modelBuilder.Entity<PrestamoBalon>(entity =>
-        {
-            entity.HasKey(e => e.PkIdPrestamo).HasName("PK__PRESTAMO__B13DC6965DA3C6D3");
-
-            entity.ToTable("PRESTAMO_BALON");
-
-            entity.Property(e => e.PkIdPrestamo).HasColumnName("PK_id_prestamo");
-            entity.Property(e => e.DniGarantia)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("dni_garantia");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasDefaultValue("Pendiente")
-                .HasColumnName("estado");
-            entity.Property(e => e.FechaDevolucion).HasColumnName("fecha_devolucion");
-            entity.Property(e => e.FechaEntrega).HasColumnName("fecha_entrega");
-            entity.Property(e => e.FkIdReserva).HasColumnName("FK_id_reserva");
-
-            entity.HasOne(d => d.FkIdReservaNavigation).WithMany(p => p.PrestamoBalons)
-                .HasForeignKey(d => d.FkIdReserva)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_prestamo_reserva");
-        });
-
-        modelBuilder.Entity<Profesor>(entity =>
-        {
-            entity.HasKey(e => e.PkIdProfesor).HasName("PK__PROFESOR__B58982DC5B7A6744");
-
-            entity.ToTable("PROFESOR");
-
-            entity.HasIndex(e => e.FkIdUsuario, "UQ__PROFESOR__42628239B7AC3DC5").IsUnique();
-
-            entity.Property(e => e.PkIdProfesor).HasColumnName("PK_id_profesor");
-            entity.Property(e => e.CategoriaEdad)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("categoria_edad");
-            entity.Property(e => e.FkIdUsuario).HasColumnName("FK_id_usuario");
-            entity.Property(e => e.Nombre)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("nombre");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
-
-            entity.HasOne(d => d.FkIdUsuarioNavigation).WithOne(p => p.Profesor)
-                .HasForeignKey<Profesor>(d => d.FkIdUsuario)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("fk_profesor_usuario");
+            entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
+            entity.Property(e => e.NombreCliente).HasMaxLength(100).IsUnicode(false).HasColumnName("nombre_cliente");
+            entity.Property(e => e.TipoCliente).HasMaxLength(20).IsUnicode(false).HasColumnName("tipo_cliente");
+            entity.Property(e => e.ActivoCliente).HasDefaultValue(true).HasColumnName("activo_cliente");
+            entity.Property(e => e.NumeroDocumento).HasMaxLength(20).IsUnicode(false).HasColumnName("numero_documento");
+            entity.Property(e => e.TelefonoCliente).HasMaxLength(20).IsUnicode(false).HasColumnName("telefono_cliente");
         });
 
         modelBuilder.Entity<Reserva>(entity =>
         {
-            entity.HasKey(e => e.PkIdReserva).HasName("PK__RESERVA__01CA262A10537BE9");
+            entity.HasKey(e => e.IdReserva);
+            entity.ToTable("RESERVA", tb =>
+            {
+                tb.HasTrigger("trg_reserva_sin_cruces");
+                tb.HasTrigger("trg_reserva_rol_usuario");
+            });
 
-            entity.ToTable("RESERVA", tb => tb.HasTrigger("trg_reserva_no_overlap"));
-
-            entity.Property(e => e.PkIdReserva).HasColumnName("PK_id_reserva");
-            entity.Property(e => e.Adelanto)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("adelanto");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasDefaultValue("Pendiente")
-                .HasColumnName("estado");
-            entity.Property(e => e.FkIdCancha).HasColumnName("FK_id_cancha");
-            entity.Property(e => e.FkIdCliente).HasColumnName("FK_id_cliente");
-            entity.Property(e => e.FkIdUsuario).HasColumnName("FK_id_usuario");
-            entity.Property(e => e.HoraFin).HasColumnName("hora_fin");
+            entity.Property(e => e.IdReserva).HasColumnName("id_reserva");
             entity.Property(e => e.HoraInicio).HasColumnName("hora_inicio");
-            entity.Property(e => e.Saldo)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("saldo");
+            entity.Property(e => e.HoraFin).HasColumnName("hora_fin");
+            entity.Property(e => e.PrecioReserva).HasColumnType("decimal(10, 2)").HasColumnName("precio_reserva");
+            entity.Property(e => e.EstadoReserva).HasMaxLength(20).IsUnicode(false).HasDefaultValue("Pendiente").HasColumnName("estado_reserva");
+            entity.Property(e => e.MontoRecibido).HasColumnType("decimal(10, 2)").HasDefaultValue(0m).HasColumnName("monto_recibido");
+            entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
+            entity.Property(e => e.IdCancha).HasColumnName("id_cancha");
+            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
 
-            entity.HasOne(d => d.FkIdCanchaNavigation).WithMany(p => p.Reservas)
-                .HasForeignKey(d => d.FkIdCancha)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_reserva_cancha");
-
-            entity.HasOne(d => d.FkIdClienteNavigation).WithMany(p => p.Reservas)
-                .HasForeignKey(d => d.FkIdCliente)
+            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Reservas)
+                .HasForeignKey(d => d.IdCliente)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_reserva_cliente");
 
-            entity.HasOne(d => d.FkIdUsuarioNavigation).WithMany(p => p.Reservas)
-                .HasForeignKey(d => d.FkIdUsuario)
+            entity.HasOne(d => d.IdCanchaNavigation).WithMany(p => p.Reservas)
+                .HasForeignKey(d => d.IdCancha)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_reserva_cancha");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Reservas)
+                .HasForeignKey(d => d.IdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_reserva_usuario");
         });
 
-        modelBuilder.Entity<Usuario>(entity =>
+        modelBuilder.Entity<Alumno>(entity =>
         {
-            entity.HasKey(e => e.PkIdUsuario).HasName("PK__USUARIO__25C4350567F1C697");
+            entity.HasKey(e => e.IdAlumno);
+            entity.ToTable("ALUMNO", tb => tb.HasTrigger("trg_alumno_rol_usuario"));
 
-            entity.ToTable("USUARIO");
+            entity.Property(e => e.IdAlumno).HasColumnName("id_alumno");
+            entity.Property(e => e.NombreAlumno).HasMaxLength(100).IsUnicode(false).HasColumnName("nombre_alumno");
+            entity.Property(e => e.TelefonoApoderado).HasMaxLength(20).IsUnicode(false).HasColumnName("telefono_apoderado");
+            entity.Property(e => e.FechaIngreso).HasColumnName("fecha_ingreso");
+            entity.Property(e => e.ActivoAlumno).HasDefaultValue(true).HasColumnName("activo_alumno");
+            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
 
-            entity.HasIndex(e => e.Username, "uq_usuario_username").IsUnique();
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Alumnos)
+                .HasForeignKey(d => d.IdUsuario)
+                .HasConstraintName("fk_alumno_usuario");
+        });
 
-            entity.Property(e => e.PkIdUsuario).HasColumnName("PK_id_usuario");
-            entity.Property(e => e.Activo)
-                .HasDefaultValue(true)
-                .HasColumnName("activo");
-            entity.Property(e => e.Password)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("password");
-            entity.Property(e => e.Rol)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("rol");
-            entity.Property(e => e.Username)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("username");
+        modelBuilder.Entity<Clase>(entity =>
+        {
+            entity.HasKey(e => e.IdClase);
+            entity.ToTable("CLASE", tb =>
+            {
+                tb.HasTrigger("trg_clase_sin_cruces");
+                tb.HasTrigger("trg_clase_rol_usuario");
+                tb.HasTrigger("trg_clase_cierre");
+            });
+
+            entity.Property(e => e.IdClase).HasColumnName("id_clase");
+            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+            entity.Property(e => e.IdCancha).HasColumnName("id_cancha");
+            entity.Property(e => e.FechaClase).HasColumnName("fecha_clase");
+            entity.Property(e => e.HoraInicio).HasPrecision(0).HasColumnName("hora_inicio");
+            entity.Property(e => e.HoraFin).HasPrecision(0).HasColumnName("hora_fin");
+            entity.Property(e => e.EstadoClase).HasMaxLength(20).IsUnicode(false).HasDefaultValue("Programada").HasColumnName("estado_clase");
+            entity.Property(e => e.ActivoClase).HasDefaultValue(true).HasColumnName("activo_clase");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Clases)
+                .HasForeignKey(d => d.IdUsuario)
+                .HasConstraintName("fk_clase_usuario");
+
+            entity.HasOne(d => d.IdCanchaNavigation).WithMany(p => p.Clases)
+                .HasForeignKey(d => d.IdCancha)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_clase_cancha");
+        });
+
+        modelBuilder.Entity<Asistencia>(entity =>
+        {
+            entity.HasKey(e => e.IdAsistencia);
+            entity.ToTable("ASISTENCIA", tb =>
+            {
+                tb.HasTrigger("trg_asistencia_validar");
+                tb.HasTrigger("trg_asistencia_no_borrar_cerrada");
+            });
+
+            entity.HasIndex(e => new { e.IdClase, e.IdAlumno }, "uq_asistencia_clase_alumno").IsUnique();
+
+            entity.Property(e => e.IdAsistencia).HasColumnName("id_asistencia");
+            entity.Property(e => e.IdClase).HasColumnName("id_clase");
+            entity.Property(e => e.IdAlumno).HasColumnName("id_alumno");
+            entity.Property(e => e.EstadoAsistencia).HasMaxLength(20).IsUnicode(false).HasColumnName("estado_asistencia");
+
+            entity.HasOne(d => d.IdClaseNavigation).WithMany(p => p.Asistencias)
+                .HasForeignKey(d => d.IdClase)
+                .HasConstraintName("fk_asistencia_clase");
+
+            entity.HasOne(d => d.IdAlumnoNavigation).WithMany(p => p.Asistencias)
+                .HasForeignKey(d => d.IdAlumno)
+                .HasConstraintName("fk_asistencia_alumno");
+        });
+
+        modelBuilder.Entity<PrestamoBalon>(entity =>
+        {
+            entity.HasKey(e => e.IdPrestamo);
+            entity.ToTable("PRESTAMO_BALON", tb => tb.HasTrigger("trg_prestamo_validar"));
+
+            entity.Property(e => e.IdPrestamo).HasColumnName("id_prestamo");
+            entity.Property(e => e.IdReserva).HasColumnName("id_reserva");
+            entity.Property(e => e.IdClase).HasColumnName("id_clase");
+            entity.Property(e => e.FechaEntrega).HasColumnName("fecha_entrega");
+            entity.Property(e => e.FechaDevolucion).HasColumnName("fecha_devolucion");
+            entity.Property(e => e.EstadoPrestamo).HasMaxLength(20).IsUnicode(false).HasDefaultValue("Pendiente").HasColumnName("estado_prestamo");
+
+            entity.HasOne(d => d.IdReservaNavigation).WithMany(p => p.PrestamoBalons)
+                .HasForeignKey(d => d.IdReserva)
+                .HasConstraintName("fk_prestamo_reserva");
+
+            entity.HasOne(d => d.IdClaseNavigation).WithMany(p => p.PrestamoBalons)
+                .HasForeignKey(d => d.IdClase)
+                .HasConstraintName("fk_prestamo_clase");
         });
 
         OnModelCreatingPartial(modelBuilder);

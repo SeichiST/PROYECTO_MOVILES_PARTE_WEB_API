@@ -6,32 +6,32 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Models;
 
 public partial class Reserva
 {
-    public int PkIdReserva { get; set; }
+    public int IdReserva { get; set; }
 
     public DateTime HoraInicio { get; set; }
 
     public DateTime HoraFin { get; set; }
 
-    public decimal Adelanto { get; set; }
+    public decimal PrecioReserva { get; set; }
 
-    public decimal Saldo { get; set; }
+    public string EstadoReserva { get; set; } = null!;
 
-    public string Estado { get; set; } = null!;
+    public decimal MontoRecibido { get; set; }
 
-    public int FkIdCancha { get; set; }
+    public int IdCliente { get; set; }
 
-    public int FkIdCliente { get; set; }
+    public int IdCancha { get; set; }
 
-    public int FkIdUsuario { get; set; }
-
-    [JsonIgnore]
-    public virtual Cancha FkIdCanchaNavigation { get; set; } = null!;
+    public int IdUsuario { get; set; }
 
     [JsonIgnore]
-    public virtual Cliente FkIdClienteNavigation { get; set; } = null!;
+    public virtual Cliente? IdClienteNavigation { get; set; }
 
     [JsonIgnore]
-    public virtual Usuario FkIdUsuarioNavigation { get; set; } = null!;
+    public virtual Cancha? IdCanchaNavigation { get; set; }
+
+    [JsonIgnore]
+    public virtual Usuario? IdUsuarioNavigation { get; set; }
 
     [JsonIgnore]
     public virtual ICollection<PrestamoBalon> PrestamoBalons { get; set; } = new List<PrestamoBalon>();

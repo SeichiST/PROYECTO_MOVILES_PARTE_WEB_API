@@ -6,19 +6,19 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Models;
 
 public partial class Cancha
 {
-    public int PkIdCancha { get; set; }
+    public int IdCancha { get; set; }
 
-    public string Nombre { get; set; } = null!;
+    public string NombreCancha { get; set; } = null!;
 
-    public string TipoDeporteCesped { get; set; } = null!;
+    public string DescripcionCancha { get; set; } = null!;
 
     public decimal PrecioAlquiler { get; set; }
 
-    public bool Activo { get; set; }
-
-    [JsonIgnore]
-    public virtual ICollection<HorarioAcademia> HorarioAcademia { get; set; } = new List<HorarioAcademia>();
+    public bool ActivoCancha { get; set; }
 
     [JsonIgnore]
     public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
+
+    [JsonIgnore]
+    public virtual ICollection<Clase> Clases { get; set; } = new List<Clase>();
 }

@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PROYECTO_MOVILES_PARTE_WEB_API.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
 {
     [Route("api/[controller]")]
@@ -43,18 +41,18 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
         {
             try
             {
-               await db.Canchas.AddAsync(value);
+                await db.Canchas.AddAsync(value);
                 await db.SaveChangesAsync();
 
                 return Ok("Cancha agregada correctamente");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException!.Message);
+                return BadRequest(ex.GetBaseException().Message);
             }
         }
 
-        // PUT api/<CanchasAPIController>/5
+        // PUT api/<CanchasAPIController>
         [HttpPut]
         public async Task<ActionResult<Cancha>> PutCancha([FromBody] Cancha value)
         {
@@ -66,7 +64,7 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException!.Message);
+                return BadRequest(ex.GetBaseException().Message);
             }
         }
 
@@ -89,9 +87,8 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException!.Message);
+                return BadRequest(ex.GetBaseException().Message);
             }
         }
-        
     }
 }

@@ -6,18 +6,21 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Models;
 
 public partial class PrestamoBalon
 {
-    public int PkIdPrestamo { get; set; }
+    public int IdPrestamo { get; set; }
 
-    public int FkIdReserva { get; set; }
+    public int? IdReserva { get; set; }
 
-    public string DniGarantia { get; set; } = null!;
+    public int? IdClase { get; set; }
 
     public DateTime FechaEntrega { get; set; }
 
     public DateTime? FechaDevolucion { get; set; }
 
-    public string Estado { get; set; } = null!;
+    public string EstadoPrestamo { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual Reserva FkIdReservaNavigation { get; set; } = null!;
+    public virtual Reserva? IdReservaNavigation { get; set; }
+
+    [JsonIgnore]
+    public virtual Clase? IdClaseNavigation { get; set; }
 }

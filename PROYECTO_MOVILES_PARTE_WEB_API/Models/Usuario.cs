@@ -6,19 +6,26 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Models;
 
 public partial class Usuario
 {
-    public int PkIdUsuario { get; set; }
+    public int IdUsuario { get; set; }
 
-    public string Username { get; set; } = null!;
+    public string UsernameUsuario { get; set; } = null!;
+
+    public string NombreUsuario { get; set; } = null!;
+
+    public string Telefono { get; set; } = null!;
 
     public string Password { get; set; } = null!;
 
-    public bool Activo { get; set; }
+    public bool ActivoUsuario { get; set; }
 
     public string Rol { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual Profesor? Profesor { get; set; }
+    public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
 
     [JsonIgnore]
-    public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
+    public virtual ICollection<Alumno> Alumnos { get; set; } = new List<Alumno>();
+
+    [JsonIgnore]
+    public virtual ICollection<Clase> Clases { get; set; } = new List<Clase>();
 }

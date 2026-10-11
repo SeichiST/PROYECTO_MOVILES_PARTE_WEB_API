@@ -6,14 +6,17 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Models;
 
 public partial class Asistencia
 {
-    public int PkIdAsistencia { get; set; }
+    public int IdAsistencia { get; set; }
 
-    public DateOnly FechaClase { get; set; }
+    public int IdClase { get; set; }
 
-    public string Estado { get; set; } = null!;
+    public int IdAlumno { get; set; }
 
-    public int FkIdAlumno { get; set; }
+    public string EstadoAsistencia { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual Alumno FkIdAlumnoNavigation { get; set; } = null!;
+    public virtual Clase? IdClaseNavigation { get; set; }
+
+    [JsonIgnore]
+    public virtual Alumno? IdAlumnoNavigation { get; set; }
 }

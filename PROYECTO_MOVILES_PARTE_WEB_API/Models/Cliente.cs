@@ -6,15 +6,17 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Models;
 
 public partial class Cliente
 {
-    public int PkIdCliente { get; set; }
+    public int IdCliente { get; set; }
 
-    public string Dni { get; set; } = null!;
-
-    public string Nombre { get; set; } = null!;
+    public string NombreCliente { get; set; } = null!;
 
     public string TipoCliente { get; set; } = null!;
 
-    public bool Activo { get; set; }
+    public bool ActivoCliente { get; set; }
+
+    public string NumeroDocumento { get; set; } = null!;
+
+    public string? TelefonoCliente { get; set; }
 
     [JsonIgnore]
     public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();

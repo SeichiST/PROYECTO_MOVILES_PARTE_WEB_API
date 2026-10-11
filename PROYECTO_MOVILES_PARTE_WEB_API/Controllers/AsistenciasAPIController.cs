@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PROYECTO_MOVILES_PARTE_WEB_API.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
 {
     [Route("api/[controller]")]
@@ -21,7 +19,7 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
         [HttpGet("GetAsistencias")]
         public async Task<List<Asistencia>> GetAsistencias()
         {
-            var listado = await db.Asistencia.ToListAsync();
+            var listado = await db.Asistencias.ToListAsync();
             return listado;
         }
 
@@ -29,7 +27,7 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
         [HttpGet("GetAsistencia/{id}")]
         public async Task<ActionResult<Asistencia>> GetAsistencia(int id)
         {
-            var obj = await db.Asistencia.FindAsync(id);
+            var obj = await db.Asistencias.FindAsync(id);
             if (obj == null)
             {
                 return BadRequest("Codigo no existente");
@@ -43,30 +41,30 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
         {
             try
             {
-               await db.Asistencia.AddAsync(value);
+                await db.Asistencias.AddAsync(value);
                 await db.SaveChangesAsync();
 
                 return Ok("Asistencia agregada correctamente");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException!.Message);
+                return BadRequest(ex.GetBaseException().Message);
             }
         }
 
-        // PUT api/<AsistenciasAPIController>/5
+        // PUT api/<AsistenciasAPIController>
         [HttpPut]
         public async Task<ActionResult<Asistencia>> PutAsistencia([FromBody] Asistencia value)
         {
             try
             {
-                await Task.Run(() => db.Asistencia.Update(value));
+                await Task.Run(() => db.Asistencias.Update(value));
                 await db.SaveChangesAsync();
                 return Ok("Asistencia modificada correctamente");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException!.Message);
+                return BadRequest(ex.GetBaseException().Message);
             }
         }
 
@@ -76,22 +74,21 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
         {
             try
             { 
-                var buscado = await db.Asistencia.FindAsync(id);
+                var buscado = await db.Asistencias.FindAsync(id);
 
                 if (buscado == null)
                 {
                     return BadRequest("Codigo no existente");
                 }
 
-                db.Asistencia.Remove(buscado);
+                db.Asistencias.Remove(buscado);
                 await db.SaveChangesAsync();
                 return Ok("Asistencia eliminada correctamente");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.InnerException!.Message);
+                return BadRequest(ex.GetBaseException().Message);
             }
         }
-        
     }
 }
