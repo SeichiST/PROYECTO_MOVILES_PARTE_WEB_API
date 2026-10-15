@@ -44,7 +44,7 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
                 await db.Reservas.AddAsync(value);
                 await db.SaveChangesAsync();
 
-                return Ok("Reserva agregada correctamente");
+                return Ok(value);   // ← devuelve la entidad con su IdReserva
             }
             catch (Exception ex)
             {
@@ -73,13 +73,20 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
         public async Task<ActionResult<Reserva>> DeleteReserva(int id)
         {
             try
-            { 
+            {
                 var buscado = await db.Reservas.FindAsync(id);
 
                 if (buscado == null)
                 {
                     return BadRequest("Codigo no existente");
                 }
+
+                // Tablas hijas primero
+                var prestamos = db.PrestamoBalons.Where(p => p.IdReserva == id);
+                db.PrestamoBalons.RemoveRange(prestamos);
+
+                // Si el paso 1 mostró más tablas, agrégalas aquí con el mismo patrón:
+                // db.OtraTabla.RemoveRange(db.OtraTabla.Where(x => x.IdReserva == id));
 
                 db.Reservas.Remove(buscado);
                 await db.SaveChangesAsync();
