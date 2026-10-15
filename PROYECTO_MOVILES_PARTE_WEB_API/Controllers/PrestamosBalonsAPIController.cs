@@ -44,7 +44,7 @@ namespace PROYECTO_MOVILES_PARTE_WEB_API.Controllers
                 await db.PrestamoBalons.AddAsync(value);
                 await db.SaveChangesAsync();
 
-                return Ok("Prestamo agregado correctamente");
+                return Ok(value);   
             }
             catch (Exception ex)
             {
